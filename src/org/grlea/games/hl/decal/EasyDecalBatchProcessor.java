@@ -1,6 +1,6 @@
 package org.grlea.games.hl.decal;
 
-// $Id: EasyDecalBatchProcessor.java,v 1.1 2004-11-25 05:07:18 grlea Exp $
+// $Id: EasyDecalBatchProcessor.java,v 1.2 2004-11-26 12:27:37 grlea Exp $
 // Copyright (c) 2004 Graham Lea. All rights reserved.
 
 // Licensed under the Apache License, Version 2.0 (the "License");
@@ -23,6 +23,8 @@ import java.awt.Graphics2D;
 import java.io.File;
 import java.io.IOException;
 import java.net.URL;
+import java.util.ArrayList;
+import java.util.Arrays;
 
 import javax.imageio.ImageIO;
 import javax.swing.ImageIcon;
@@ -33,166 +35,96 @@ import javax.swing.JFrame;
  * <p></p>
  *
  * @author grlea
- * @version $Revision: 1.1 $
+ * @version $Revision: 1.2 $
  */
-public class
+class
 EasyDecalBatchProcessor
+implements FileSource, DecalCreator.Callback
 {
-   public static void
-   main(String[] argv)
+   private final File[] imageFiles;
+
+   private boolean errors = false;
+
+   public
+   EasyDecalBatchProcessor(String[] filenames)
    {
-      System.out.println();
-
-      // Read arguments
-      // TODO (grahaml) Read more arguments
-      if (argv.length == 0)
-         usage();
-
-      DecalSizes sizes = new DecalSizes();
-
-      boolean errors = false;
-      for (int i = 0; i < argv.length; i++)
+      imageFiles = new File[filenames.length];
+      for (int i = 0; i < filenames.length; i++)
       {
-         String imageFilename = argv[i];
-         try
-         {
-            File imageFile = new File(imageFilename);
-            System.out.println(imageFile);
-            System.out.println("   Reading");
-
-            if (!imageFile.exists())
-            {
-               error(imageFile + " does not exist.");
-               errors = true;
-               continue;
-            }
-
-            if (imageFile.isDirectory())
-            {
-               error(imageFile + " is a directory.");
-               errors = true;
-               continue;
-            }
-
-            if (!imageFile.canRead())
-            {
-               error(imageFile + " cannot be read.");
-               errors = true;
-               continue;
-            }
-
-            // Read image in
-            BufferedImage image = null;
-            try
-            {
-               image = ImageIO.read(imageFile);
-
-               if (image == null)
-               {
-                  error("Your Java installation is not capable of reading this type of image.");
-                  errors = true;
-                  continue;
-               }
-            }
-            catch (IOException e)
-            {
-               error("Failure while reading image file: " + e);
-               errors = true;
-               continue;
-            }
-
-            // Find best size
-            System.out.print("   Converting ");
-            DecalSize size = sizes.getClosestDimension(image);
-            System.out.println("(" + size.getWidth() + "x" + size.getHeight() + ")");
-
-            WadEntry entry = new WadEntry("pldecal", size.getWidth(), size.getHeight());
-            entry.createAllMips(image);
-
-            // Create palette
-            entry.generatePaletteFromAllMips();
-
-            // Write to WAD
-            System.out.println("   Writing WAD");
-            Wad wad = new Wad();
-            wad.addEntry(entry);
-
-            File directory = imageFile.getParentFile();
-            File wadFile = new File(directory, imageFile.getName() + ".wad");
-            try
-            {
-               wad.write(wadFile);
-            }
-            catch (IOException e)
-            {
-               error("Failure while writing WAD file: " + e);
-               errors = true;
-               continue;
-            }
-
-            // Test code to write a PNG file of MIP1
-            // TODO (grahaml) Make this a command line option? Or cfg file?
-            boolean writeMipsToPngs = false;
-
-            if (writeMipsToPngs)
-            {
-               try
-               {
-                  System.out.println("   Writing MIPs to " + imageFile.getName() + ".mip*.png");
-                  String mip1Filename = imageFile.getName() + ".mip1.png";
-                  String mip2Filename = imageFile.getName() + ".mip2.png";
-                  String mip3Filename = imageFile.getName() + ".mip3.png";
-                  String mip4Filename = imageFile.getName() + ".mip4.png";
-                  boolean imagesWritten;
-                  imagesWritten = ImageIO.write(entry.getMip1Converted(), "png", new File(directory, mip1Filename));
-                  imagesWritten &= ImageIO.write(entry.getMip2Converted(), "png", new File(directory, mip2Filename));
-                  imagesWritten &= ImageIO.write(entry.getMip3Converted(), "png", new File(directory, mip3Filename));
-                  imagesWritten &= ImageIO.write(entry.getMip4Converted(), "png", new File(directory, mip4Filename));
-                  if (!imagesWritten)
-                     throw new IOException("Failed to find PNG writer.");
-
-//                  BufferedImage mip1 = entry.getMip1();
-//                  BufferedImage mip1Bmp = new BufferedImage(mip1.getWidth(), mip1.getHeight(), BufferedImage.TYPE_INT_RGB);
-//                  Graphics2D graphics = mip1Bmp.createGraphics();
-//                  graphics.drawImage(mip1, 0, 0, null);
-//                  graphics.dispose();
-//                  ImageIO.write(mip1Bmp, "bmp", new File(directory, "MIP1.bmp"));
-               }
-               catch (IOException e)
-               {
-                  error("Failure while writing PNG file(s): " + e);
-                  errors = true;
-               }
-            }
-
-//             Test code to show MIP1 in a frame
-            boolean shopMip1InFrame = false;
-            if (shopMip1InFrame)
-            {
-               System.out.println("   Displaying MIP");
-               ImageIcon icon = new ImageIcon(entry.getMip1Converted());
-               JFrame frame = new JFrame(imageFilename);
-               frame.getContentPane().add(new JButton(icon));
-               frame.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
-               frame.pack();
-               frame.setVisible(true);
-            }
-         }
-         catch (RuntimeException e)
-         {
-            error("Uncaught runtime error: " + e);
-            e.printStackTrace();
-         }
-         catch (Error e)
-         {
-            error("Uncaught runtime error: " + e);
-            e.printStackTrace();
-         }
-
-         System.out.println("   Done");
-         System.out.println();
+         imageFiles[i] = new File(filenames[i]);
       }
+   }
 
+   public File[]
+   getSourceFiles()
+   {
+      return imageFiles;
+   }
+
+   public void
+   starting()
+   {
+      System.out.println("Beginning batch processing");
+      System.out.println();
+   }
+
+   public void
+   c1_StartingFile(File file)
+   {
+      System.out.println(file.getAbsolutePath());
+   }
+
+   public void
+   c2_Reading()
+   {
+      // TODO (grahaml) Internationalize this
+      System.out.println("   Reading");
+   }
+
+   public void
+   c3_CalculatingSize()
+   {
+      // TODO (grahaml) Internationalize this
+      System.out.print("   Converting ");
+   }
+
+   public void
+   c4_Resizing(DecalSize decalSize)
+   {
+      System.out.println("(" + decalSize.getWidth() + "x" + decalSize.getHeight() + ")");
+   }
+
+   public void
+   c5_GeneratingPalette()
+   {
+   }
+
+   public void
+   c6_WritingWad(File wadFile)
+   {
+      // TODO (grahaml) Internationalize this
+      System.out.println("   Writing WAD");
+   }
+
+   public void
+   c65_WritingMipsToPngs()
+   {
+      // TODO (grahaml) Internationalize this
+      System.out.println("   Writing MIPs to PNG files");
+   }
+
+   public void
+   c7_ImageDone()
+   {
+      // TODO (grahaml) Internationalize this
+      System.out.println("   Done");
+      System.out.println();
+   }
+
+   public void
+   allDone()
+   {
+      // TODO (grahaml) Internationalize this
       if (errors)
       {
          System.err.println();
@@ -201,22 +133,29 @@ EasyDecalBatchProcessor
          System.err.println("Errors occurred during batch processing.");
          System.err.println("See output for details.");
          System.err.println();
+         System.exit(-1);
       }
+      System.exit(0);
    }
 
-   private static void
+   public void
    error(String error)
    {
+      // TODO (grahaml) Internationalize this
       System.err.println();
       System.err.println("   ERROR: " + error);
       System.err.println();
+      errors = true;
    }
 
-   private static void
-   usage()
+   public void
+   uncaughtError(Throwable t)
    {
-      System.err.println("usage: <jvm> " + EasyDecalBatchProcessor.class.getName() + " <image_file> [<image_file> ...]");
-      System.exit(1);
+      // TODO (grahaml) Internationalize this
+      System.err.println();
+      System.err.println("   UNCAUGHT RUNTIME ERROR: " + t);
+      t.printStackTrace();
+      System.err.println();
+      errors = true;
    }
-
 }

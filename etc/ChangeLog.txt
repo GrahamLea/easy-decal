@@ -7,6 +7,10 @@
 
 CHANGE LOG
 
+0.4a
+
+   + Refactored the batch processor class in preparation for implementing the GUI.
+
 0.3a
 
    + Fixed Defect -2: Source images with transparent areas produced blue-hatched backgrounds.

@@ -1,6 +1,6 @@
 package org.grlea.games.hl.wad;
 
-// $Id: WadEntry.java,v 1.1 2004-11-25 05:07:19 grlea Exp $
+// $Id: WadEntry.java,v 1.2 2004-11-26 12:27:38 grlea Exp $
 // Copyright (c) 2004 Graham Lea. All rights reserved.
 
 // Licensed under the Apache License, Version 2.0 (the "License");
@@ -34,7 +34,7 @@ import java.nio.ByteBuffer;
  * <p></p>
  *
  * @author grlea
- * @version $Revision: 1.1 $
+ * @version $Revision: 1.2 $
  */
 public class
 WadEntry
@@ -81,6 +81,11 @@ WadEntry
          throw new IllegalArgumentException("Width of a WadEntry must be a multiple of 16.");
       if (height % 16 != 0)
          throw new IllegalArgumentException("Height of a WadEntry must be a multiple of 16.");
+
+      if (width > 256)
+         throw new IllegalArgumentException("Width of a WadEntry must be a less than 256.");
+      if (height > 256)
+         throw new IllegalArgumentException("Height of a WadEntry must be a less than 256.");
 
       setName(name);
       this.width = width;
