@@ -112,12 +112,17 @@ Here are some of the features Simple Log <b>does not</b> contain (on purpose):
 
 
 <h3>Sample Code</h3>
+
+<h4>Creating a Logger</h4>
+
 <p>
 To use Simple Log, you just create a SimpleLogger at the top of your class, like this:<pre>
    private static final SimpleLogger log = new SimpleLogger(HelloWorld.class);
 </pre>
 and then use that logger through your class.<br>
 </p>
+
+<h4>Using a Logger</h4>
 
 <p>Here's an example of how you might use Simple Log:<pre>
 public class
@@ -136,7 +141,8 @@ HelloWorld
          log.debug("About to print 'Hello World!'");
          String helloWorldString = "'Hello World!'";
          log.dbo(DebugLevel.L6_VERBOSE, "helloWorldString", helloWorldString);
-         log.db(DebugLevel.L7_LUDICROUS, "I can't believe this library has a level called 'Ludicrous'!");
+         log.db(DebugLevel.L7_LUDICROUS,
+                "I can't believe this library has a level called 'Ludicrous'!");
 
          System.out.println(helloWorldString);
 
