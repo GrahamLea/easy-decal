@@ -52,9 +52,9 @@ Here are some of the features that Simple Log contains:
    <li>Support for tracing: entry and exit.</li>
    <li>Seven debug levels: Fatal, Error, Warn, Info, Debug, Verbose, Ludicrous.</li>
    <li>Ability to switch tracing on and off independent of the debug level.</li>
-   <li>Minimal configuration which is easy to write, understand and maintain.</li>
    <li>Package-based, hierarchical inheritance of debug levels and trace flags.</li>
-   <li>Special handling of exceptions, object arrays, byte arrays and char arrays.</li>
+   <li>Configuration is minimal and easy to write, understand and maintain.</li>
+   <li>Special printing of exceptions, object arrays, byte arrays and char arrays.</li>
    <li>Reloading configuration (optional).</li>
    <li>Customisable log format.</li>
    <li>Customisable log date format.</li>
@@ -69,31 +69,37 @@ Here are some of the features Simple Log <b>does not</b> contain (on purpose):
    <li>
       An XML Configuration File.<br>
       <i>The properties configuration file is simple and easier to read and maintain than XML.</i>
+      <br>
    </li>
    <li>
       Any concept of a "Logging Pipeline" or "Log Event" objects.<br>
       <i>As well as consuming memory unnecessarily, such architectures are overkill for the simple
       level-based logging that most applications require.</i>
+      <br>
    </li>
    <li>
       Extendable Debug Levels<br>
       <i>Really, is 7 not enough!?</i>
+      <br>
    </li>
    <li>
       Custom Filters<br>
       <i>All messages are either logged or not based on the level of the message compared to the
       level assigned to the class that created it. If you need something fancier, this is not the
       package for you.</i>
+      <br>
    </li>
    <li>
       Custom Formatters/Renderers<br>
       <i>The format of log messages can be controlled, from the properties file, using the extremely
       flexible java.text.MessageFormat.</i>
+      <br>
    </li>
    <li>
       A 200-page Manual<br>
       <i>If you can't understand the javadoc for 3 classes, you probably shouldn't be programming.
       </i>
+      <br>
    </li>
 </ul>
 </p>
