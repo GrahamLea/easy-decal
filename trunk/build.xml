@@ -1,0 +1,321 @@
+<?xml version="1.0" encoding="iso-8859-1"?>
+<project name="easy-decal" default="CreateRelease">
+
+   <description>
+      Creates colour sprays for the Half-Life/Counter-Strike engine.
+   </description>
+
+   <property file="ant.properties"/>
+
+   <!-- Inputs -->
+   <!-- Directories -->
+   <property name="scriptDir" value="bin"/>
+   <property name="sourceDir" value="src"/>
+   <property name="etcDir" value="etc"/>
+   <property name="libDir" value="lib"/>
+
+   <property name="source.core" value="${sourceDir}"/>
+<!--   <property name="source.swing" value="${sourceDir}/swing"/>-->
+
+   <!-- Files -->
+   <property name="manifest" value="${etcDir}/Manifest.mf"/>
+<!--   <property name="manifest.swing" value="${etcDir}/Manifest-swing.mf"/>-->
+
+   <property name="readmeFileName" value="README.txt"/>
+   <property name="licenseFileName" value="LICENSE.txt"/>
+   <property name="versionFileName" value="VERSION.txt"/>
+   <property name="changelogFileName" value="ChangeLog.txt"/>
+
+   <!-- Source path: The files that go into the src/ zip -->
+   <fileset id="sources" dir=".">
+      <include name="ant.properties"/>
+      <include name="build.xml"/>
+      <include name="bin/**"/>
+      <include name="etc/**"/>
+      <include name="${source.core}/**"/>
+<!--      <include name="${source.swing}/**"/>-->
+   </fileset>
+
+   <!-- Outputs -->
+   <!-- Directories-->
+   <property name="releasesDir" value="release"/>
+   <property name="releaseDir" value="${releasesDir}/${product.version}"/>
+   <property name="buildDir" value="${releaseDir}/build"/>
+   <property name="wwwDir" value="www"/>
+   <property name="wwwReleaseDir" value="${wwwDir}/release"/>
+   <property name="wwwJnlpDir" value="${wwwDir}/jnlp"/>
+
+   <property name="tempDir" value="${releaseDir}/temp"/>
+   <property name="classes" value="${tempDir}/classes"/>
+   <property name="classes.core" value="${classes}/core"/>
+<!--   <property name="classes.swing" value="${classes}/swing"/>-->
+   <property name="docDir" value="${buildDir}/doc"/>
+<!--   <property name="javadocDir" value="${docDir}/api"/>-->
+
+   <!-- Classpath -->
+   <path id="classpath.core">
+<!--      <fileset dir="." >-->
+<!--      </fileset>-->
+   </path>
+
+<!--   <path id="classpath.swing">-->
+<!--      <dirset dir=".">-->
+<!--         <include name="${classes.core}"/>-->
+<!--      </dirset>-->
+<!--      <fileset dir="." >-->
+<!--      </fileset>-->
+<!--      <path refid="classpath.core"/>-->
+<!--   </path>-->
+
+   <path id="classpath.all">
+      <path refid="classpath.core"/>
+<!--      <path refid="classpath.swing"/>-->
+   </path>
+
+   <!-- Jars -->
+   <property name="jar.core.name" value="${ant.project.name}.jar"/>
+<!--   <property name="jar.swing.name" value="${ant.project.name}-swing.jar"/>-->
+   <property name="jar.core" value="${buildDir}/${jar.core.name}"/>
+<!--   <property name="jar.swing" value="${buildDir}/${jar.swing.name}"/>-->
+
+   <!-- Zips -->
+   <property name="sourceZipName" value="${ant.project.name}-src.zip"/>
+   <property name="sourceZip" value="${buildDir}/${sourceZipName}"/>
+   <property name="docZipName" value="${ant.project.name}-doc.zip"/>
+   <property name="docZip" value="${buildDir}/${docZipName}"/>
+   <property name="releaseZipName" value="${ant.project.name}-${product.version}.zip"/>
+   <property name="releaseZip" value="${releaseDir}/${releaseZipName}"/>
+
+   <!-- Targets -->
+
+   <target name="CreateRelease" depends="Clean, BuildRelease">
+<!--      <delete dir="${docDir}" includeemptydirs="true" />-->
+      <zip zipfile="${releaseZip}" >
+         <zipfileset dir="${buildDir}" includes="**/*" excludes="${releaseZipName}, ${sourceZipName}, ${docZipName}"
+                     prefix="${ant.project.name}-${product.version}"/>
+      </zip>
+   </target>
+
+   <target name="CreateReleaseAndBuildWww" depends="Clean, BuildRelease, CopyWwwArtefacts, CreateRelease">
+      <copy file="${releaseZip}" todir="${wwwReleaseDir}"/>
+   </target>
+
+   <target name="CopyWwwArtefacts" depends="BuildRelease">
+
+      <delete>
+         <fileset dir="${wwwReleaseDir}" includes="**"/> 
+      </delete>
+      <copy todir="${wwwReleaseDir}">
+         <fileset dir="${buildDir}">
+            <include name="LICENSE.txt"/>
+            <include name="README.txt"/>
+            <include name="${jar.core.name}"/>
+<!--            <include name="${jar.swing.name}"/>-->
+            <include name="${docZipName}"/>
+            <include name="${sourceZipName}"/>
+         </fileset>
+      </copy>
+
+      <delete>
+         <fileset dir="${wwwJnlpDir}" includes="**"/>
+      </delete>
+      <copy todir="${wwwJnlpDir}">
+         <fileset dir="${buildDir}">
+            <include name="${jar.core.name}"/>
+<!--            <include name="${jar.swing.name}"/>-->
+         </fileset>
+      </copy>
+
+<!--      <signjar jar="${wwwJnlpDir}/${jar.core.name}" alias="grlea" storepass="" />-->
+<!--      <signjar jar="${wwwJnlpDir}/${jar.swing.name}" alias="grlea" storepass=""/>-->
+
+   </target>
+
+   <target name="BuildRelease"
+           depends="Clean, BuildCodeJars, BuildSourceZip, CopyDocuments, CopyScripts, CopyLibs, BuildDocZip, Cleanup"/>
+
+   <target name="Init">
+      <tstamp/>
+      <mkdir dir="${tempDir}"/>
+      <mkdir dir="${classes}"/>
+      <mkdir dir="${classes.core}"/>
+<!--      <mkdir dir="${classes.swing}"/>-->
+
+      <mkdir dir="${releaseDir}"/>
+      <mkdir dir="${buildDir}"/>
+      <mkdir dir="${docDir}"/>
+      <mkdir dir="${wwwJnlpDir}"/>
+
+<!--      <mkdir dir="${libDir}"/>-->
+<!--      <copy file="${lib.explicitLayout.dir}/${lib.explicitLayout.name}" todir="${libDir}"/>-->
+<!--      <copy file="${lib.explicitTableLayout.dir}/${lib.explicitTableLayout.name}" todir="${libDir}"/>-->
+<!--      <copy file="${lib.jgoodiesLooksPlastic.dir}/${lib.jgoodiesLooksPlastic.name}" todir="${libDir}"/>-->
+   </target>
+
+   <target name="Clean">
+      <delete dir="${classes}"/>
+      <delete dir="${releaseDir}"/>
+   </target>
+
+   <target name="BuildCodeJars"
+           depends="BuildCodeJar-core">
+   </target>
+
+   <target name="BuildCodeJar-core" depends="CompileJavas-core, CopyResources-core">
+<!--      <jar jarfile="${jar.core}"-->
+<!--           basedir="${classes.core}"-->
+<!--           manifest="${manifest.core}"-->
+<!--           includes="**"/>-->
+      <jar jarfile="${jar.core}"
+           basedir="${classes.core}"
+           manifest="${manifest}"
+           includes="**"/>
+<!--      <signjar jar="${jar.core}" alias="${keystoreAlias}" storepass="${keystorePassword}"/>-->
+   </target>
+
+<!--   <target name="BuildCodeJar-swing"-->
+<!--           depends="BuildCodeJar-core, CompileJavas-swing, CopyResources-swing">-->
+<!--      <jar jarfile="${jar.swing}"-->
+<!--           basedir="${classes.swing}"-->
+<!--           manifest="${manifest.swing}"-->
+<!--           includes="**"/>-->
+<!--   </target>-->
+
+   <target name="CompileJavas"
+           depends="Init, CompileJavas-core">
+   </target>
+
+   <target name="CompileJavas-core" depends="Init" >
+      <javac srcdir="${source.core}"
+             classpathref="classpath.core"
+             destdir="${classes.core}"
+             includes="org/**/*.java">
+         <compilerarg value="-source"/>
+         <compilerarg value="1.4"/>
+         <compilerarg value="-target"/>
+         <compilerarg value="1.4"/>
+      </javac>
+   </target>
+
+<!--   <target name="CompileJavas-swing" depends="Init, CompileJavas-core" >-->
+<!--      <javac srcdir="${source.swing}"-->
+<!--             classpathref="classpath.swing"-->
+<!--             destdir="${classes.swing}"-->
+<!--             includes="org/**/*.java"/>-->
+<!--   </target>-->
+
+   <target name="CopyResources-core" depends="CopyDocuments" >
+      <copy todir="${classes.core}/meta-inf" >
+         <fileset dir="${buildDir}" includes="${licenseFileName},${readmeFileName},${versionFileName},${changelogFileName}"/>
+      </copy>
+   </target>
+
+<!--   <target name="CopyResources-swing" depends="CopyDocuments" >-->
+<!--      <copy todir="${classes.swing}" >-->
+<!--         <fileset dir="${buildDir}" includes="${licenseFileName},${readmeFileName},${versionFileName}"/>-->
+<!--      </copy>-->
+<!--   </target>-->
+
+   <target name="BuildSourceZip" depends="Init">
+      <zip zipfile="${sourceZip}">
+         <fileset refid="sources"/>
+      </zip>
+   </target>
+
+   <target name="CopyDocuments">
+      <copy todir="${buildDir}">
+         <fileset dir="${etcDir}" includes="${licenseFileName},${readmeFileName},${versionFileName},${changelogFileName}"/>
+         <filterset>
+            <filter token="VERSION" value="${product.version}" />
+          </filterset>
+      </copy>
+      <copy todir="${docDir}">
+         <fileset dir="${etcDir}" includes="*.html,*.css"/>
+         <filterset>
+            <filter token="VERSION" value="${product.version}" />
+          </filterset>
+      </copy>
+   </target>
+
+   <target name="CopyScripts">
+      <copy todir="${buildDir}">
+         <fileset dir="${scriptDir}" includes="*"/>
+      </copy>
+   </target>
+
+   <target name="CopyLibs">
+<!--      <copy todir="${buildDir}">-->
+<!--         <fileset dir="${basedir}" includes="lib/**"/>-->
+<!--      </copy>-->
+<!--      <signjar alias="${keystoreAlias}" storepass="${keystorePassword}">-->
+<!--         <fileset dir="${buildDir}/lib" includes="**.jar" />-->
+<!--      </signjar>-->
+   </target>
+
+<!--   <target name="BuildDocZip" depends="CompileJavadoc">-->
+   <target name="BuildDocZip">
+<!--      <zip zipfile="${docZip}">-->
+<!--         <fileset dir="${docDir}" includes="**"/>-->
+<!--      </zip>-->
+   </target>
+
+<!--   <target name="CompileJavadoc" depends="Init">-->
+<!--      <javadoc destdir="${javadocDir}"-->
+<!--               classpathref="classpath.all"-->
+<!--               packagenames="org.grlea.**.*"-->
+<!--               access="protected" Author="true" Use="true" Version="true"-->
+<!--               Windowtitle="${product.name} ${product.version}"-->
+<!--               nodeprecatedlist="true" notree="true" nohelp="true" failonerror="true"-->
+<!--               additionalparam="-linksource" >-->
+<!---->
+<!--         <link offline="true"-->
+<!--               href="${jdk.javadoc.remote}"-->
+<!--               packagelistloc="${jdk.javadoc.local}" />-->
+<!---->
+<!--         <sourcepath>-->
+<!--            <dirset dir=".">-->
+<!--               <include name="${source.core}"/>-->
+<!--               <include name="${source.swing}"/>-->
+<!--               <include name="${source.demo}"/>-->
+<!--            </dirset>-->
+<!--         </sourcepath>-->
+<!---->
+<!--         <group title="Core Classes">-->
+<!--            <package name="org.grlea.imageTiles"/>-->
+<!--            <package name="org.grlea.imageTiles.background"/>-->
+<!--            <package name="org.grlea.imageTiles.choose"/>-->
+<!--            <package name="org.grlea.imageTiles.imageSource"/>-->
+<!--            <package name="org.grlea.imageTiles.pipeline"/>-->
+<!--            <package name="org.grlea.imageTiles.place"/>-->
+<!--            <package name="org.grlea.imageTiles.render"/>-->
+<!--            <package name="org.grlea.imageTiles.tileHolder"/>-->
+<!--            <package name="org.grlea.imageTiles.transition"/>-->
+<!--         </group>-->
+<!---->
+<!--         <group title="AWT &amp; Swing Components">-->
+<!--            <package name="org.grlea.imageTiles.swing"/>-->
+<!--            <package name="org.grlea.imageTiles.swing.configure"/>-->
+<!--         </group>-->
+<!---->
+<!--         <group title="Demonstration Applications">-->
+<!--            <package name="org.grlea.imageTiles.demo"/>-->
+<!--         </group>-->
+<!---->
+<!--         <header>-->
+<!--            Image Tiles ${product.version} &lt;br /&gt;-->
+<!--            &lt;a href="http://image-tiles.dev.java.net/" target="_blank"&gt;http://image-tiles.dev.java.net/ &lt;/a&gt;&lt;br /&gt;&lt;br /&gt;-->
+<!--         </header>-->
+<!---->
+<!--         <bottom>-->
+<!--            Copyright (c) 2004 Graham Lea. &lt;br /&gt;-->
+<!--            All rights reserved.-->
+<!--         </bottom>-->
+<!--      </javadoc>-->
+<!--   </target>-->
+
+   <target name="Cleanup">
+      <delete dir="${classes}" failonerror="false"/>
+      <delete dir="${tempDir}" failonerror="false"/>
+   </target>
+
+</project>
