@@ -1,0 +1,3 @@
+Easy Decal
+Version @VERSION@
+http://easy-decal.dev.java.net/

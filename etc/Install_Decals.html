@@ -1,0 +1,124 @@
+<html>
+<head>
+   <title>Installing Decals</title>
+   <link rel="StyleSheet" href="style.css" type="text/css">
+</head>
+<body>
+<div>
+<h1>Installing Decals</h1>
+
+<p>To install a Decal into Half-Life, Counter-Strike or any other HL-engine-based game, you need to copy the generated
+WAD file to within your game or mod directory and rename it.<br>
+Where to copy it and what to name it depends on your how you're running Half-Life:</p>
+
+<p>To find out how to create a decal with Easy Decal, see <a href="Create_Decals.html">Creating Decals with Easy Decal</a>.</p>
+
+<h2>Summary</h2>
+
+This is a summary of where files should be copied and what they should be renamed to.<br>
+For further information see the detail explanations below.
+
+<h3>Steam</h3>
+
+Copy to:<pre>
+   &lt;Steam_Install_Dir&gt; \ SteamApps \ &lt;Steam_ID&gt; \ &lt;Game_Dir&gt; \ &lt;Game_Abrreviation_Dir&gt;</pre>
+Rename to:<pre>
+   tempdecal.wad</pre>
+Example:<pre>
+   C:\Program Files\Steam\SteamApps\bbgun\counter-strike\cstrike\tempdecal.wad</pre>
+
+<h3>Without Steam</h3>
+
+Copy to:<pre>
+   &lt;Game_Install_Dir&gt; \ &lt;Game_Abrreviation_Dir&gt;</pre>
+Rename to:<pre>
+   pldecal.wad</pre>
+Example:<pre>
+   C:\Program Files\Half-Life\cstrike\pldecal.wad</pre>
+
+
+<h2>Steam</h2>
+
+<h3>Copy the WAD</h3>
+
+<p>If you're running your games using Steam, you need to copy your decal WAD file to:<pre>
+   &lt;Steam_Install_Dir&gt; \ SteamApps \ &lt;Steam_ID&gt; \ &lt;Game_Dir&gt; \ &lt;Game_Abrreviation_Dir&gt;</pre>
+
+where:<br><br>
+
+   <code>&lt;Steam_Install_Dir&gt;</code><br>
+   is the directory where Steam is installed (e.g. C:\Program Files\Steam)<br><br>
+
+   <code>&lt;Steam_ID&gt;</code><br>
+   is your Steam ID (there will probably only be one directory under SteamApps/)<br><br>
+
+   <code>&lt;Game_Dir&gt;</code><br>
+   is the directory containing the game or mod to which you want to add the decal (e.g. "counter-strike", "half-life"
+   or "team fortress classic")<br><br>
+
+   <code>&lt;Game_Abbreviation_Dir&gt;</code><br>
+   is the directory inside Game_Dir that is an abreviation of the game's or mod's name (e.g. "cstrike", "half-life"
+   or "tfc")<br><br>
+</p>
+
+<p>As an example, for Billy Bob Gunn (whose steam ID is 'bbgun') to install a decal into Counter-Strike, he would copy
+it into:<pre>
+   C:\Program Files\Steam\SteamApps\bbgun\counter-strike\cstrike\</pre>
+
+Note that you need to copy the decal into the directory of each game or mod in which you want to use it.</p>
+
+
+<h3>Rename the WAD</h3>
+
+<p>You then need to delete the file called <code>tempdecal.wad</code> (if one exists) and rename your decal's WAD
+file to <code>tempdecal.wad</code>.</p>
+
+<p>It is recommended that, at this point, you make the file read-only.<br>
+This is because every time you change your Steam settings (video, audio, multi-player name, etc.), Steam will overwrite
+this file with whatever standard decal is selected in the options.<br>
+If the file is read-only, Steam (usually) won't overwrite it.</p>
+
+
+
+
+<h2>Half-Life / Counter-Strike<br>
+<font size="-1">(Store bought)</font></h2>
+
+<h3>Copy the WAD</h3>
+
+<p>If you're running your games using a Half-Life engine that you bought at a store (hopefully) in a Half-Life or
+Counter-Strike box, and you don't use Steam, you should copy your decal WAD file to:<pre>
+   &lt;Game_Install_Dir&gt; \ &lt;Game_Abrreviation_Dir&gt;</pre>
+
+where:<br><br>
+
+   <code>&lt;Game_Install_Dir&gt;</code><br>
+   is the directory where your installed the game (e.g. C:\Program Files\Half-Life)<br><br>
+
+   <code>&lt;Game_Abbreviation_Dir&gt;</code><br>
+   is the directory inside Game_Install_Dir that is an abreviation of the name of the game or mod to which you want to
+   add the decal (e.g. "cstrike", "half-life" or "tfc")
+   <br><br>
+</p>
+
+<p>As an example, if Billy bought Half-Life and then installed Counter-Strike 1.5 into it, he would copy his decal into:
+<pre>
+C:\Program Files\Half-Life\cstrike\</pre>
+
+Note that you need to copy the decal into the directory of each game or mod in which you want to use it.</p>
+
+<h3>Rename the WAD</h3>
+
+<p>You then need to delete the file called <code>pldecal.wad</code> (if one exists) and rename your decal's WAD
+file to <code>pldecal.wad</code>.</p>
+
+<p>It is recommended that, at this point, you make the file read-only.<br>
+This is because every time you change your game settings (video, audio, multi-player name, etc.), the game will
+overwrite this file with whatever standard decal is selected in the options.<br>
+If the file is read-only, it (usually) won't overwrite it.</p>
+
+<hr>
+
+</div>
+</body>
+</html>
