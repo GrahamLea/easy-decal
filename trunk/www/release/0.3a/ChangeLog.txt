@@ -1,0 +1,22 @@
+
+                                 Easy Decal
+
+                                Version 0.3a
+
+                        http://easy-decal.dev.java.net/
+
+CHANGE LOG
+
+0.3a
+
+   + Fixed Defect -2: Source images with transparent areas produced blue-hatched backgrounds.
+
+0.2a
+
+   + Moved most functionality into the Wad API
+   + Fixed Defect -1: Illegally sized decals created
+   + Discovered the Half-Life engine doesn't even USE the lower MIPs! Oh well...
+
+0.1a
+
+   + Initial alpha release.
