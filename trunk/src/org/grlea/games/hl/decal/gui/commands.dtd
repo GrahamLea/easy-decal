@@ -1,0 +1,164 @@
+<!--
+
+commands
+
+The main element for an command configuration document, containing definitions of
+commands, groups and faces.
+
+Attributes:
+version  The version of the DTD.  This must have the value "1.1.0".
+-->
+<!ELEMENT commands ( command | group | toggle-group | faces )* >
+<!ATTLIST commands version CDATA #FIXED "1.1.0">
+<!ATTLIST commands defaultLocale CDATA #IMPLIED>
+
+
+
+<!--
+command
+
+The element used to configure instances of ActionCommand.
+
+Attributes:
+id  The ID of the ActionCommand to which the command element applies.
+-->
+<!ELEMENT command (action-command? | class? | face+ | property? | help?)+ >
+<!ATTLIST command id ID #REQUIRED >
+
+
+<!--
+action-command
+
+This element isn't used directly by the library but is used to populate the ACTION_COMAND
+attribute of any Actions that are requested from the Command.  If this element is unspecified
+the commands id is used.
+
+Do not use this attribute unless you require it for interation with existing code.
+-->
+<!ELEMENT action-command ( #PCDATA ) >
+
+<!ELEMENT class ( #PCDATA ) >
+
+<!--
+face
+
+Faces define the appearance of groups and commands in various contexts.
+-->
+<!ELEMENT face
+   (text? | accelerator? | description? | long-description? |
+   icon? | selected-icon? | rollover-icon? | rollover-selected-icon? | pressed-icon? |
+   disabled-icon? | icon-text-gap? | client-property?)* >
+
+<!ATTLIST face name CDATA #IMPLIED>
+<!ATTLIST face extends CDATA #IMPLIED>
+<!ATTLIST face locale CDATA #IMPLIED>
+<!ATTLIST face menu-tooltips (enabled | disabled) #IMPLIED>
+
+<!ELEMENT text ( #PCDATA ) >
+<!ATTLIST text horizontal-position (leading | centre | trailing) #IMPLIED >
+<!ATTLIST text vertical-position (top | centre | bottom) #IMPLIED >
+<!ATTLIST text mnemonic CDATA #IMPLIED>
+<!ATTLIST text mnemonic-index CDATA #IMPLIED >
+<!ATTLIST text i18n CDATA #IMPLIED >
+<!ATTLIST text include-if CDATA #IMPLIED >
+
+<!ELEMENT accelerator ( modifier* ) >
+<!ATTLIST accelerator key NMTOKEN #IMPLIED >
+<!ATTLIST accelerator keyStroke NMTOKEN #IMPLIED >
+<!ATTLIST accelerator useDefaultModifier (true | false) #IMPLIED >
+<!ATTLIST accelerator include-if CDATA #IMPLIED >
+
+<!ELEMENT modifier EMPTY >
+<!ATTLIST modifier value (alt | shift | control | meta | default) #REQUIRED >
+
+
+<!ELEMENT description ( #PCDATA ) >
+<!ATTLIST description i18n CDATA #IMPLIED >
+
+<!ELEMENT long-description ( #PCDATA ) >
+<!ATTLIST long-description i18n CDATA #IMPLIED >
+
+<!ELEMENT icon ( #PCDATA ) >
+<!ATTLIST icon type (file | url | classpath | bean | factory | icon-factory) #IMPLIED >
+<!ATTLIST icon i18n CDATA #IMPLIED >
+<!ATTLIST icon include-if CDATA #IMPLIED >
+
+<!ELEMENT selected-icon ( #PCDATA ) >
+<!ATTLIST selected-icon type (file | url | classpath | bean | factory | icon-factory) #IMPLIED >
+<!ATTLIST selected-icon i18n CDATA #IMPLIED >
+<!ATTLIST selected-icon include-if CDATA #IMPLIED >
+
+<!ELEMENT rollover-icon ( #PCDATA ) >
+<!ATTLIST rollover-icon type (file | url | classpath | bean | factory | icon-factory) #IMPLIED >
+<!ATTLIST rollover-icon i18n CDATA #IMPLIED >
+<!ATTLIST rollover-icon include-if CDATA #IMPLIED >
+
+<!ELEMENT rollover-selected-icon ( #PCDATA ) >
+<!ATTLIST rollover-selected-icon type (file | url | classpath | bean | factory | icon-factory) #IMPLIED >
+<!ATTLIST rollover-selected-icon i18n CDATA #IMPLIED >
+<!ATTLIST rollover-selected-icon include-if CDATA #IMPLIED >
+
+
+<!ELEMENT pressed-icon ( #PCDATA ) >
+<!ATTLIST pressed-icon type (file | url | classpath | bean | factory | icon-factory) #IMPLIED >
+<!ATTLIST pressed-icon i18n CDATA #IMPLIED >
+<!ATTLIST pressed-icon include-if CDATA #IMPLIED >
+
+<!ELEMENT disabled-icon ( #PCDATA ) >
+<!ATTLIST disabled-icon type (file | url | classpath | bean | factory | icon-factory) #IMPLIED >
+<!ATTLIST disabled-icon i18n CDATA #IMPLIED >
+<!ATTLIST disabled-icon include-if CDATA #IMPLIED >
+
+
+<!ELEMENT icon-text-gap ( #PCDATA ) >
+
+
+<!ELEMENT group (property?, class?, face+, property?, members, property?) >
+<!ATTLIST group id NMTOKEN #REQUIRED >
+
+
+<!ELEMENT toggle-group (property?, class?, face+, property?, members, property?) >
+<!ATTLIST toggle-group id NMTOKEN #REQUIRED >
+<!ATTLIST toggle-group exclusive (true | false) #REQUIRED>
+<!ATTLIST toggle-group allow-empty (true | false) #IMPLIED>
+
+
+<!ELEMENT members ((member | separator | glue)*, expansion-point?, (member | separator | glue)*) >
+
+<!ELEMENT member EMPTY >
+<!ATTLIST member command-id CDATA #REQUIRED >
+<!ATTLIST member inline (true | false) #IMPLIED >
+<!ATTLIST member include-if CDATA #IMPLIED >
+
+<!ELEMENT separator EMPTY >
+<!ATTLIST separator include-if CDATA #IMPLIED >
+
+<!ELEMENT glue EMPTY >
+
+<!ELEMENT expansion-point EMPTY >
+<!ATTLIST expansion-point separator (none | before | after | both) #IMPLIED >
+
+
+<!ELEMENT property (#PCDATA)>
+<!ATTLIST property name CDATA #REQUIRED>
+<!ATTLIST property i18n CDATA #IMPLIED>
+
+<!ELEMENT client-property (#PCDATA)>
+<!ATTLIST client-property name CDATA #REQUIRED>
+<!ATTLIST client-property i18n CDATA #IMPLIED>
+
+
+<!ELEMENT faces (face-def)*>
+<!ELEMENT face-def (face)+>
+<!ATTLIST face-def id ID #REQUIRED >
+
+
+<!ELEMENT help ( help-id ) >
+
+<!ELEMENT help-id EMPTY >
+<!ATTLIST help-id prefix NMTOKEN #REQUIRED >
+<!ATTLIST help-id useCommandId NMTOKEN #REQUIRED >
+
+
+
+

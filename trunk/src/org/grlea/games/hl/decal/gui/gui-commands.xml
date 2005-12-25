@@ -1,0 +1,52 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE commands SYSTEM "commands.dtd">
+<commands version="1.1.0">
+
+   <!-- COMMANDS -->
+   <!-- ........................................................................................ -->
+
+   <command id="AddFiles">
+
+      <face>
+         <text i18n="addFilesText"/>
+         <!--<icon type="classpath">images/open16.png</icon>-->
+         <description i18n="addFilesDescription"/>
+         <accelerator key="o">
+            <modifier value="control"/>
+         </accelerator>
+      </face>
+   </command>
+
+   <command id="RemoveFiles">
+      <face>
+         <text i18n="removeFilesText"/>
+         <description i18n="removeFilesDescription"/>
+         <accelerator key="delete"/>
+      </face>
+   </command>
+
+   <command id="CreateDecals">
+      <face>
+         <text i18n="createDecalsText"/>
+         <description i18n="createDecalsDescription"/>
+         <accelerator key="Enter">
+            <modifier value="control"/>
+         </accelerator>
+      </face>
+   </command>
+
+   <command id="Donate">
+      <face>
+         <text i18n="donateText"/>
+         <description i18n="donateDescription"/>
+      </face>
+   </command>
+
+   <command id="Exit">
+      <face>
+         <text i18n="exitText"/>
+         <description i18n="exitDescription"/>
+      </face>
+   </command>
+
+</commands>
