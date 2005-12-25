@@ -9,7 +9,7 @@ CHANGE LOG
 
 1.0
 
-   + Implemented an initial GUI
+   + Implemented the GUI!
 
 0.5a
 
