@@ -12,6 +12,7 @@
    <property name="scriptDir" value="bin"/>
    <property name="sourceDir" value="src"/>
    <property name="etcDir" value="etc"/>
+   <property name="resourcesDir" value="${etcDir}/resources"/>
    <property name="libDir" value="lib"/>
 
    <property name="source.core" value="${sourceDir}"/>
@@ -41,6 +42,7 @@
    <property name="releasesDir" value="release"/>
    <property name="releaseDir" value="${releasesDir}/${product.version}"/>
    <property name="buildDir" value="${releaseDir}/build"/>
+   <property name="installerDir" value="${releasesDir}/installer"/>
    <property name="wwwDir" value="www"/>
    <property name="wwwReleaseDir" value="${wwwDir}/release"/>
    <property name="wwwJnlpDir" value="${wwwDir}/jnlp"/>
@@ -53,7 +55,23 @@
 <!--   <property name="javadocDir" value="${docDir}/api"/>-->
 
    <!-- Classpath -->
+   <fileset id="libs" dir="C:/Java/lib">
+      <include name="simple-log/2.0a/simple-log.jar"/>
+      <include name="gui-commands/1.1.42/gui-commands-1.1.42.jar"/>
+      <include name="ExplicitLayout/3.0/lib/elcore.jar"/>
+      <include name="explicit-tablelayout/0.1.24/explicitTableBuilder-0.1.24.jar"/>
+      <include name="foxtrot-2.0/lib/foxtrot.jar"/>
+      <include name="jdic/0.9/jdic.jar"/>
+      <include name="jdic/0.9/windows/jdic_stub.jar"/>
+      <include name="jdic/0.9/windows/jdic-native.jar"/>
+   </fileset>
+
+   <fileset id="dlls" dir="C:/Java/lib">
+      <include name="jdic/0.9/windows/x86/jdic.dll"/>
+   </fileset>
+
    <path id="classpath.core">
+      <fileset refid="libs"/>
 <!--      <fileset dir="." >-->
 <!--      </fileset>-->
    </path>
@@ -132,7 +150,7 @@
    </target>
 
    <target name="BuildRelease"
-           depends="Clean, BuildCodeJars, BuildSourceZip, CopyDocuments, CopyScripts, CopyLibs, BuildDocZip, Cleanup"/>
+           depends="Clean, BuildCodeJars, BuildSourceZip, CopyDocuments, CopyScripts, CopyLibs, BuildDocZip, Cleanup, BuildInstallerDir"/>
 
    <target name="Init">
       <tstamp/>
@@ -143,6 +161,7 @@
 
       <mkdir dir="${releaseDir}"/>
       <mkdir dir="${buildDir}"/>
+      <mkdir dir="${installerDir}"/>
       <mkdir dir="${docDir}"/>
       <mkdir dir="${wwwJnlpDir}"/>
 
@@ -155,6 +174,7 @@
    <target name="Clean">
       <delete dir="${classes}"/>
       <delete dir="${releaseDir}"/>
+      <delete dir="${inreleaseDir}"/>
    </target>
 
    <target name="BuildCodeJars"
@@ -205,8 +225,18 @@
 <!--   </target>-->
 
    <target name="CopyResources-core" depends="CopyDocuments" >
-      <copy todir="${classes.core}/meta-inf" >
+      <copy todir="${classes.core}/meta-inf/${ant.project.name}" >
          <fileset dir="${buildDir}" includes="${licenseFileName},${readmeFileName},${versionFileName},${changelogFileName}"/>
+      </copy>
+      <copy todir="${classes.core}" >
+         <!--<fileset dir="${resourcesDir}" includes="*" />-->
+         <fileset dir="${resourcesDir}" includes="*" excludes="simplelog.properties"/>
+      </copy>
+      <copy todir="${classes.core}" >
+         <fileset dir="${sourceDir}" includes="**/*.properties,**/*.xml"/>
+      </copy>
+      <copy todir="${buildDir}" >
+         <fileset dir="${etcDir}" includes="*.cfg"/>
       </copy>
    </target>
 
@@ -229,6 +259,10 @@
             <filter token="VERSION" value="${product.version}" />
           </filterset>
       </copy>
+      <mkdir dir="${buildDir}/lib/debug"/>
+      <copy todir="${buildDir}/lib/debug">
+         <fileset dir="${resourcesDir}" includes="simplelog.properties"/>
+      </copy>
       <copy todir="${docDir}">
          <fileset dir="${etcDir}" includes="*.html,*.css"/>
          <filterset>
@@ -244,9 +278,12 @@
    </target>
 
    <target name="CopyLibs">
-<!--      <copy todir="${buildDir}">-->
-<!--         <fileset dir="${basedir}" includes="lib/**"/>-->
-<!--      </copy>-->
+      <copy todir="${buildDir}/lib" flatten="true" >
+         <fileset refid="libs"/>
+      </copy>
+      <copy todir="${buildDir}" flatten="true" >
+         <fileset refid="dlls"/>
+      </copy>
 <!--      <signjar alias="${keystoreAlias}" storepass="${keystorePassword}">-->
 <!--         <fileset dir="${buildDir}/lib" includes="**.jar" />-->
 <!--      </signjar>-->
@@ -259,6 +296,19 @@
 <!--      </zip>-->
    </target>
 
+   <target name="BuildInstallerDir" depends="Clean, BuildCodeJars, CopyDocuments, CopyScripts, CopyLibs, Cleanup">
+
+      <copy todir="${installerDir}">
+         <fileset dir="${buildDir}">
+            <include name="**"/>
+            <exclude name="${sourceZipName}"/>
+         </fileset>
+      </copy>
+
+      <copy todir="${installerDir}" file="images/icons/EasyDecal.ico" />
+
+   </target>
+
 <!--   <target name="CompileJavadoc" depends="Init">-->
 <!--      <javadoc destdir="${javadocDir}"-->
 <!--               classpathref="classpath.all"-->
@@ -267,11 +317,11 @@
 <!--               Windowtitle="${product.name} ${product.version}"-->
 <!--               nodeprecatedlist="true" notree="true" nohelp="true" failonerror="true"-->
 <!--               additionalparam="-linksource" >-->
-<!---->
+<!-- -->
 <!--         <link offline="true"-->
 <!--               href="${jdk.javadoc.remote}"-->
 <!--               packagelistloc="${jdk.javadoc.local}" />-->
-<!---->
+<!-- -->
 <!--         <sourcepath>-->
 <!--            <dirset dir=".">-->
 <!--               <include name="${source.core}"/>-->
@@ -279,7 +329,7 @@
 <!--               <include name="${source.demo}"/>-->
 <!--            </dirset>-->
 <!--         </sourcepath>-->
-<!---->
+<!-- -->
 <!--         <group title="Core Classes">-->
 <!--            <package name="org.grlea.imageTiles"/>-->
 <!--            <package name="org.grlea.imageTiles.background"/>-->
@@ -291,21 +341,21 @@
 <!--            <package name="org.grlea.imageTiles.tileHolder"/>-->
 <!--            <package name="org.grlea.imageTiles.transition"/>-->
 <!--         </group>-->
-<!---->
+<!-- -->
 <!--         <group title="AWT &amp; Swing Components">-->
 <!--            <package name="org.grlea.imageTiles.swing"/>-->
 <!--            <package name="org.grlea.imageTiles.swing.configure"/>-->
 <!--         </group>-->
-<!---->
+<!-- -->
 <!--         <group title="Demonstration Applications">-->
 <!--            <package name="org.grlea.imageTiles.demo"/>-->
 <!--         </group>-->
-<!---->
+<!-- -->
 <!--         <header>-->
 <!--            Image Tiles ${product.version} &lt;br /&gt;-->
 <!--            &lt;a href="http://image-tiles.dev.java.net/" target="_blank"&gt;http://image-tiles.dev.java.net/ &lt;/a&gt;&lt;br /&gt;&lt;br /&gt;-->
 <!--         </header>-->
-<!---->
+<!-- -->
 <!--         <bottom>-->
 <!--            Copyright (c) 2004 Graham Lea. &lt;br /&gt;-->
 <!--            All rights reserved.-->
