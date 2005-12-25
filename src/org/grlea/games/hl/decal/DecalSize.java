@@ -1,6 +1,6 @@
 package org.grlea.games.hl.decal;
 
-// $Id: DecalSize.java,v 1.1 2004-11-25 05:07:18 grlea Exp $
+// $Id: DecalSize.java,v 1.2 2005-12-25 22:10:05 grlea Exp $
 // Copyright (c) 2004 Graham Lea. All rights reserved.
 
 // Licensed under the Apache License, Version 2.0 (the "License");
@@ -26,7 +26,7 @@ import java.awt.image.BufferedImage;
  * <p></p>
  *
  * @author grlea
- * @version $Revision: 1.1 $
+ * @version $Revision: 1.2 $
  */
 public class
 DecalSize
@@ -122,5 +122,18 @@ DecalSize
       graphics.dispose();
 
       return result;
+   }
+
+   /**
+    * Returns a string representation of this object in its current state.
+    */
+   public String
+   toString()
+   {
+      return "DecalSize@" + hashCode() +
+         "[width=" + width +
+         ", height=" + height +
+         ", ratio=" + ratio +
+         "]";
    }
 }

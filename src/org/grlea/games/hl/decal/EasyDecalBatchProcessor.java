@@ -1,6 +1,6 @@
 package org.grlea.games.hl.decal;
 
-// $Id: EasyDecalBatchProcessor.java,v 1.2 2004-11-26 12:27:37 grlea Exp $
+// $Id: EasyDecalBatchProcessor.java,v 1.3 2005-12-25 22:10:05 grlea Exp $
 // Copyright (c) 2004 Graham Lea. All rights reserved.
 
 // Licensed under the Apache License, Version 2.0 (the "License");
@@ -15,27 +15,13 @@ package org.grlea.games.hl.decal;
 // See the License for the specific language governing permissions and
 // limitations under the License.
 
-import org.grlea.games.hl.wad.Wad;
-import org.grlea.games.hl.wad.WadEntry;
-
-import java.awt.image.BufferedImage;
-import java.awt.Graphics2D;
 import java.io.File;
-import java.io.IOException;
-import java.net.URL;
-import java.util.ArrayList;
-import java.util.Arrays;
-
-import javax.imageio.ImageIO;
-import javax.swing.ImageIcon;
-import javax.swing.JButton;
-import javax.swing.JFrame;
 
 /**
  * <p></p>
  *
  * @author grlea
- * @version $Revision: 1.2 $
+ * @version $Revision: 1.3 $
  */
 class
 EasyDecalBatchProcessor

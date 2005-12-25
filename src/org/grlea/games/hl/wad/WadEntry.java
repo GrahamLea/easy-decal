@@ -1,6 +1,6 @@
 package org.grlea.games.hl.wad;
 
-// $Id: WadEntry.java,v 1.2 2004-11-26 12:27:38 grlea Exp $
+// $Id: WadEntry.java,v 1.3 2005-12-25 22:10:13 grlea Exp $
 // Copyright (c) 2004 Graham Lea. All rights reserved.
 
 // Licensed under the Apache License, Version 2.0 (the "License");
@@ -29,12 +29,11 @@ import java.io.IOException;
 import java.io.UnsupportedEncodingException;
 import java.nio.ByteBuffer;
 
-
 /**
  * <p></p>
  *
  * @author grlea
- * @version $Revision: 1.2 $
+ * @version $Revision: 1.3 $
  */
 public class
 WadEntry
@@ -123,122 +122,241 @@ WadEntry
       return mip4;
    }
 
-   public void
-   createMip1(BufferedImage image)
+   /**
+    * Returns <code>true</code> if the dimensions of the given image are smaller than the dimensions
+    * of this <code>WadEntry</code> (i.e. of MIP 1).
+    *
+    * @param image the image to compare to this <code>WadEntry</code>'s size.
+    *
+    * @return <code>true</code> if the images dimensions are smaller than this
+    * <code>WadEntry</code>'s, <code>false</code> otherwise.
+    */
+   public boolean
+   isImageSmallerThanMip1(BufferedImage image)
    {
-      createMip1(image, CREATE_MIP_DEFAULT_CENTRE, CREATE_MIP_DEFAULT_SCALE, CREATE_MIP_DEFAULT_STRETCH);
-   }
-
-   public void
-   createMip2(BufferedImage image)
-   {
-      createMip2(image, CREATE_MIP_DEFAULT_CENTRE, CREATE_MIP_DEFAULT_SCALE, CREATE_MIP_DEFAULT_STRETCH);
-   }
-
-   public void
-   createMip3(BufferedImage image)
-   {
-      createMip3(image, CREATE_MIP_DEFAULT_CENTRE, CREATE_MIP_DEFAULT_SCALE, CREATE_MIP_DEFAULT_STRETCH);
-   }
-
-   public void
-   createMip4(BufferedImage image)
-   {
-      createMip4(image, CREATE_MIP_DEFAULT_CENTRE, CREATE_MIP_DEFAULT_SCALE, CREATE_MIP_DEFAULT_STRETCH);
+      return image.getWidth() < width && image.getHeight() < height;
    }
 
    public void
    createAllMips(BufferedImage image)
    {
-      createAllMips(image, CREATE_MIP_DEFAULT_CENTRE, CREATE_MIP_DEFAULT_SCALE, CREATE_MIP_DEFAULT_STRETCH);
+      boolean scale = isImageSmallerThanMip1(image) ? false : CREATE_MIP_DEFAULT_SCALE;
+      createAllMips(image, scale, CREATE_MIP_DEFAULT_STRETCH, CREATE_MIP_DEFAULT_CENTRE);
    }
 
    public void
-   createMip1(BufferedImage image, boolean centre, boolean scale, boolean stretch)
+   createAllMips(BufferedImage sourceImage, boolean scale, boolean stretch, boolean centre)
    {
-      setMip1(transform(image, width, height, centre, scale, stretch));
+      ScaleFactor mip1ScaleFactor = getMip1ScaleFactor(sourceImage, scale, stretch);
+      createMip1(sourceImage, mip1ScaleFactor, centre);
+      createMip2(sourceImage, mip1ScaleFactor, centre);
+      createMip3(sourceImage, mip1ScaleFactor, centre);
+      createMip4(sourceImage, mip1ScaleFactor, centre);
    }
 
    public void
-   createMip2(BufferedImage image, boolean centre, boolean scale, boolean stretch)
+   createMip1(BufferedImage image)
    {
-      setMip2(transform(image, width / MIP2_DIMENSION_FACTOR, height / MIP2_DIMENSION_FACTOR, centre, scale, stretch));
+      boolean scale = isImageSmallerThanMip1(image) ? false : CREATE_MIP_DEFAULT_SCALE;
+      createMip1(image, scale, CREATE_MIP_DEFAULT_STRETCH, CREATE_MIP_DEFAULT_CENTRE);
    }
 
    public void
-   createMip3(BufferedImage image, boolean centre, boolean scale, boolean stretch)
+   createMip1(BufferedImage sourceImage, boolean scale, boolean stretch, boolean centre)
    {
-      setMip3(transform(image, width / MIP3_DIMENSION_FACTOR, height / MIP3_DIMENSION_FACTOR, centre, scale, stretch));
+      ScaleFactor mip1ScaleFactor = getMip1ScaleFactor(sourceImage, scale, stretch);
+      createMip1(sourceImage, mip1ScaleFactor, centre);
    }
 
    public void
-   createMip4(BufferedImage image, boolean centre, boolean scale, boolean stretch)
+   createMip1(BufferedImage sourceImage, ScaleFactor mip1ScaleFactor, boolean centre)
    {
-      setMip4(transform(image, width / MIP4_DIMENSION_FACTOR, height / MIP4_DIMENSION_FACTOR, centre, scale, stretch));
+      setMip1(createMip(1, sourceImage, mip1ScaleFactor, centre));
    }
 
    public void
-   createAllMips(BufferedImage image, boolean centre, boolean scale, boolean stretch)
+   createMip2(BufferedImage image)
    {
-      createMip1(image, centre, scale, stretch);
-      createMip2(image, centre, scale, stretch);
-      createMip3(image, centre, scale, stretch);
-      createMip4(image, centre, scale, stretch);
+      boolean scale = isImageSmallerThanMip1(image) ? false : CREATE_MIP_DEFAULT_SCALE;
+      createMip2(image, scale, CREATE_MIP_DEFAULT_STRETCH, CREATE_MIP_DEFAULT_CENTRE);
+   }
+
+   public void
+   createMip2(BufferedImage sourceImage, boolean scale, boolean stretch, boolean centre)
+   {
+      ScaleFactor mip1ScaleFactor = getMip1ScaleFactor(sourceImage, scale, stretch);
+      createMip2(sourceImage, mip1ScaleFactor, centre);
+   }
+
+   public void
+   createMip2(BufferedImage sourceImage, ScaleFactor mip1ScaleFactor, boolean centre)
+   {
+      setMip2(createMip(2, sourceImage, mip1ScaleFactor, centre));
+   }
+
+   public void
+   createMip3(BufferedImage image)
+   {
+      boolean scale = isImageSmallerThanMip1(image) ? false : CREATE_MIP_DEFAULT_SCALE;
+      createMip3(image, scale, CREATE_MIP_DEFAULT_STRETCH, CREATE_MIP_DEFAULT_CENTRE);
+   }
+
+   public void
+   createMip3(BufferedImage sourceImage, boolean scale, boolean stretch, boolean centre)
+   {
+      ScaleFactor mip1ScaleFactor = getMip1ScaleFactor(sourceImage, scale, stretch);
+      createMip3(sourceImage, mip1ScaleFactor, centre);
+   }
+
+   public void
+   createMip3(BufferedImage sourceImage, ScaleFactor mip1ScaleFactor, boolean centre)
+   {
+      setMip3(createMip(3, sourceImage, mip1ScaleFactor, centre));
+   }
+
+   public void
+   createMip4(BufferedImage image)
+   {
+      boolean scale = isImageSmallerThanMip1(image) ? false : CREATE_MIP_DEFAULT_SCALE;
+      createMip4(image, scale, CREATE_MIP_DEFAULT_STRETCH, CREATE_MIP_DEFAULT_CENTRE);
+   }
+
+   public void
+   createMip4(BufferedImage sourceImage, boolean scale, boolean stretch, boolean centre)
+   {
+      ScaleFactor mip1ScaleFactor = getMip1ScaleFactor(sourceImage, scale, stretch);
+      createMip4(sourceImage, mip1ScaleFactor, centre);
+   }
+
+   public void
+   createMip4(BufferedImage sourceImage, ScaleFactor mip1ScaleFactor, boolean centre)
+   {
+      setMip4(createMip(4, sourceImage, mip1ScaleFactor, centre));
    }
 
    private BufferedImage
-   transform(BufferedImage image, int width, int height, boolean centre, boolean scale, boolean stretch)
+   createMip(int mipNumber, BufferedImage sourceImage, ScaleFactor mip1ScaleFactor, boolean centre)
    {
-      Image sourceImage = image;
-      int sourceImageWidth = image.getWidth();
-      int sourceImageHeight = image.getHeight();
+      if (mipNumber < 1 || mipNumber > 4)
+         throw new IllegalArgumentException("Invalid mipNumber. 1 <= mipNumber <= 4");
 
-      if (scale)
+      int sourceImageWidth = sourceImage.getWidth();
+      int sourceImageHeight = sourceImage.getHeight();
+
+      // Determine the size of the target image for the MIP (not the size of the actual MIP)
+      double mipScaleFactor = Math.pow(2, mipNumber - 1);
+      double xScaleFactorForTarget = mip1ScaleFactor.getXScale() / mipScaleFactor;
+      double yScaleFactorForTarget = mip1ScaleFactor.getYScale() / mipScaleFactor;
+      int targetImageWidth = (int) (sourceImageWidth * xScaleFactorForTarget);
+      int targetImageHeight = (int) (sourceImageHeight * yScaleFactorForTarget);
+
+      final Image targetImage;
+      if (targetImageWidth != sourceImageWidth || targetImageHeight != sourceImageHeight)
       {
-         int newWidth;
-         int newHeight;
-         if (stretch)
-         {
-            newWidth = width;
-            newHeight = height;
-         }
-         else
-         {
-            float xScaleFactor = (float) width / image.getWidth();
-            float yScaleFactor = (float) height / image.getHeight();
-            float scaleFactor = Math.min(xScaleFactor, yScaleFactor);
-            newWidth = (int) (image.getWidth() * scaleFactor);
-            newHeight = (int) (image.getHeight() * scaleFactor);
-         }
-
-         sourceImage = image.getScaledInstance(newWidth, newHeight, Image.SCALE_AREA_AVERAGING);
-         sourceImageWidth = newWidth;
-         sourceImageHeight = newHeight;
+         targetImage = sourceImage.getScaledInstance(targetImageWidth, targetImageHeight,
+                                                     Image.SCALE_SMOOTH);
+      }
+      else
+      {
+         targetImage = sourceImage;
       }
 
+      // Calculate the size of the MIP image
+      int mipWidth = width >> (mipNumber - 1);
+      int mipHeight = height >> (mipNumber - 1);
+
+      // Calculate the offset, if any
       int xOffset = 0;
       int yOffset = 0;
       if (centre)
       {
-         xOffset = (width - sourceImageWidth) / 2;
-         yOffset = (height - sourceImageHeight) / 2;
+         xOffset = (mipWidth - targetImageWidth) / 2;
+         yOffset = (mipHeight - targetImageHeight) / 2;
       }
 
-      BufferedImage resultImage = new BufferedImage(width, height, BufferedImage.TYPE_INT_ARGB);
-      Graphics2D graphics = resultImage.createGraphics();
-      graphics.drawImage(sourceImage, xOffset, yOffset, null);
+      // Create the MIP image and draw the targetImage into it
+      BufferedImage mipImage = new BufferedImage(mipWidth, mipHeight, BufferedImage.TYPE_INT_ARGB);
+      Graphics2D graphics = mipImage.createGraphics();
+      graphics.drawImage(targetImage, xOffset, yOffset, null);
       graphics.dispose();
-      return resultImage;
+      return mipImage;
    }
 
+   public ScaleFactor
+   getMip1ScaleFactor(BufferedImage sourceImage, boolean scale, boolean stretch)
+   {
+      if (scale)
+      {
+         if (stretch)
+         {
+            float xScaleFactor = (float) width / sourceImage.getWidth();
+            float yScaleFactor = (float) height / sourceImage.getHeight();
+            return new ScaleFactor(xScaleFactor, yScaleFactor);
+         }
+         else
+         {
+            float xScaleFactor = (float) width / sourceImage.getWidth();
+            float yScaleFactor = (float) height / sourceImage.getHeight();
+            float smallestScaleFactor = Math.min(xScaleFactor, yScaleFactor);
+            return new ScaleFactor(smallestScaleFactor, smallestScaleFactor);
+         }
+      }
+
+      return ScaleFactor.NO_SCALE;
+   }
+
+//   private BufferedImage
+//   transform(BufferedImage image, int width, int height, boolean centre, boolean scale,
+//             boolean stretch)
+//   {
+//      Image sourceImage = image;
+//      int sourceImageWidth = image.getWidth();
+//      int sourceImageHeight = image.getHeight();
+//      int newWidth = sourceImageWidth;
+//      int newHeight = sourceImageHeight;
+//
+//      if (scale)
+//      {
+//         if (stretch)
+//         {
+//            newWidth = width;
+//            newHeight = height;
+//         }
+//         else
+//         {
+//            float xScaleFactor = (float) width / image.getWidth();
+//            float yScaleFactor = (float) height / image.getHeight();
+//            float scaleFactor = Math.min(xScaleFactor, yScaleFactor);
+//            newWidth = (int) (image.getWidth() * scaleFactor);
+//            newHeight = (int) (image.getHeight() * scaleFactor);
+//         }
+//
+//         sourceImage = image.getScaledInstance(newWidth, newHeight, Image.SCALE_AREA_AVERAGING);
+//      }
+//
+//      int xOffset = 0;
+//      int yOffset = 0;
+//      if (centre)
+//      {
+//         xOffset = (width - newWidth) / 2;
+//         yOffset = (height - newHeight) / 2;
+//      }
+//
+//      BufferedImage resultImage = new BufferedImage(width, height, BufferedImage.TYPE_INT_ARGB);
+//      Graphics2D graphics = resultImage.createGraphics();
+//      graphics.drawImage(sourceImage, xOffset, yOffset, null);
+//      graphics.dispose();
+//      return resultImage;
+//   }
+//
    public void
    generateLowerMips()
    {
       if (mip1 == null)
          throw new IllegalStateException("MIP 1 has not been created.");
-      createMip2(mip1);
-      createMip3(mip1);
-      createMip4(mip1);
+      createMip2(mip1, ScaleFactor.NO_SCALE, true);
+      createMip3(mip1, ScaleFactor.NO_SCALE, true);
+      createMip4(mip1, ScaleFactor.NO_SCALE, true);
    }
 
    public void
@@ -441,11 +559,11 @@ WadEntry
    createLowerMipsAsNecessary()
    {
       if (mip2 == null)
-         createMip2(mip1);
+         createMip2(mip1, ScaleFactor.NO_SCALE, true);
       if (mip3 == null)
-         createMip3(mip1);
+         createMip3(mip1, ScaleFactor.NO_SCALE, true);
       if (mip4 == null)
-         createMip4(mip1);
+         createMip4(mip1, ScaleFactor.NO_SCALE, true);
    }
 
    public void
@@ -573,10 +691,10 @@ WadEntry
    {
       this.palette = palette;
       indexColorModel = null;
-      mip1Converted= null;
-      mip2Converted= null;
-      mip3Converted= null;
-      mip4Converted= null;
+      mip1Converted = null;
+      mip2Converted = null;
+      mip3Converted = null;
+      mip4Converted = null;
    }
 
    public int
@@ -607,5 +725,34 @@ WadEntry
    getMip4Area()
    {
       return width * height / MIP4_AREA_FACTOR;
+   }
+
+   public static final class
+   ScaleFactor
+   {
+      public static final ScaleFactor NO_SCALE = new ScaleFactor(1, 1);
+
+      private final double xScale;
+
+      private final double yScale;
+
+      public
+      ScaleFactor(double xScale, double yScale)
+      {
+         this.xScale = xScale;
+         this.yScale = yScale;
+      }
+
+      public double
+      getXScale()
+      {
+         return xScale;
+      }
+
+      public double
+      getYScale()
+      {
+         return yScale;
+      }
    }
 }

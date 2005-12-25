@@ -1,5 +1,8 @@
 package org.grlea.games.hl.decal;
 
+import org.grlea.games.hl.decal.batch.EasyDecalBatchProcessor;
+import org.grlea.games.hl.decal.gui.Frame;
+
 import java.io.BufferedReader;
 import java.io.IOException;
 import java.io.InputStream;
@@ -8,7 +11,7 @@ import java.io.PrintWriter;
 import java.io.StringWriter;
 import java.net.URL;
 
-// $Id: EasyDecal.java,v 1.2 2004-11-26 12:27:37 grlea Exp $
+// $Id: EasyDecal.java,v 1.3 2005-12-25 22:10:05 grlea Exp $
 // Copyright (c) 2004 Graham Lea. All rights reserved.
 
 // Licensed under the Apache License, Version 2.0 (the "License");
@@ -27,14 +30,16 @@ import java.net.URL;
  * <p></p>
  *
  * @author grlea
- * @version $Revision: 1.2 $
+ * @version $Revision: 1.3 $
  */
 public class
 EasyDecal
 {
    private static final String VERSION_FILE = "VERSION.txt";
 
-   private static final String VERSION_FILE_URL = "/meta-inf/" + VERSION_FILE;
+   public static final String PROJECT_NAME = "easy-decal";
+
+   private static final String VERSION_FILE_URL = "/meta-inf/" + PROJECT_NAME + "/" + VERSION_FILE;
 
    public static void
    main(String[] argv)
@@ -54,18 +59,16 @@ EasyDecal
       {
          System.out.println();
          System.out.println("Easy Decal");
-         System.out.println("<unable to detect version>");
+         System.out.println("<unable to locate version information>");
          System.out.println();
       }
 
       // Read arguments
-      // TODO (grahaml) Plug the GUI in here:
-      if (argv.length == 0)
-         usage();
-
-      EasyDecalBatchProcessor batchProcessor = new EasyDecalBatchProcessor(argv);
-      DecalCreator creator = new DecalCreator();
-      creator.createDecals(batchProcessor, batchProcessor);
+      boolean argumentsProvided = argv.length != 0;
+      if (argumentsProvided)
+         EasyDecalBatchProcessor.startEasyDecalBatch(argv);
+      else
+         Frame.startEasyDecalGui();
    }
 
    private static boolean
@@ -87,18 +90,14 @@ EasyDecal
             in.close();
             return true;
          }
+         else
+         {
+            return false;
+         }
       }
       catch (IOException e)
-      {}
-      return false;
-   }
-
-   private static void
-   usage()
-   {
-      System.err.println("The current version of Easy Decal requires you to supply images.");
-      System.err.println("This can be done either by dragging them onto the starting script or ");
-      System.err.println("listing them on a command line.");
-      System.exit(-1);
+      {
+         return false;
+      }
    }
 }

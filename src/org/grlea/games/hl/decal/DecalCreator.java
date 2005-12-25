@@ -1,6 +1,6 @@
 package org.grlea.games.hl.decal;
 
-// $Id: DecalCreator.java,v 1.1 2004-11-26 12:27:37 grlea Exp $
+// $Id: DecalCreator.java,v 1.2 2005-12-25 22:10:05 grlea Exp $
 // Copyright (c) 2004 Graham Lea. All rights reserved.
 
 // Licensed under the Apache License, Version 2.0 (the "License");
@@ -17,31 +17,38 @@ package org.grlea.games.hl.decal;
 
 import org.grlea.games.hl.wad.Wad;
 import org.grlea.games.hl.wad.WadEntry;
-
-import java.awt.image.BufferedImage;
-import java.io.File;
-import java.io.IOException;
+import org.grlea.log.DebugLevel;
+import org.grlea.log.SimpleLogger;
 
 import javax.imageio.ImageIO;
 import javax.swing.ImageIcon;
 import javax.swing.JButton;
 import javax.swing.JFrame;
 
+import java.awt.image.BufferedImage;
+import java.io.File;
+import java.io.IOException;
+
 /**
  * <p></p>
  *
  * @author grlea
- * @version $Revision: 1.1 $
+ * @version $Revision: 1.2 $
  */
 public class
 DecalCreator
 {
+   private static final SimpleLogger log = new SimpleLogger(DecalCreator.class);
+
+   private final CreatorResources resources = CreatorResources.instance();
+
    private final DecalSizes sizes = new DecalSizes();
 
    // TODO (grahaml) Make this a command line option? Or cfg file?
    private boolean writeMipsToPngs = false;
 
    private boolean shopMip1InFrame = false;
+
 
    public
    DecalCreator()
@@ -74,77 +81,99 @@ DecalCreator
    public void
    createDecals(FileSource fileSource, Callback callback)
    {
+      log.entry("createDecals()");
+
+      callback.starting();
+
       File[] sourceFiles = fileSource.getSourceFiles();
+      log.ludicrousObject("sourceFiles", sourceFiles);
 
       for (int i = 0; i < sourceFiles.length; i++)
       {
          File imageFile = sourceFiles[i];
+         log.verbose("Loading image");
+         log.debugObject("imageFile", imageFile);
          callback.c1_StartingFile(imageFile);
+
          try
          {
             callback.c2_Reading();
 
             if (!imageFile.exists())
             {
-               callback.error(imageFile + " does not exist.");
+               log.debug("File doesn't exist");
+               callback.error(resources.fileDoesntExist(imageFile));
                continue;
             }
 
             if (imageFile.isDirectory())
             {
-               callback.error(imageFile + " is a directory.");
+               log.debug("File is a directory");
+               callback.error(resources.fileIsDirectory(imageFile));
                continue;
             }
 
             if (!imageFile.canRead())
             {
-               callback.error(imageFile + " cannot be read.");
+               log.debug("File does not have read permission");
+               callback.error(resources.fileCannotBeRead(imageFile));
                continue;
             }
 
             // Read image in
-            BufferedImage image = null;
+            final BufferedImage image;
             try
             {
                image = ImageIO.read(imageFile);
 
                if (image == null)
                {
-                  callback.error("Your Java installation is not capable of reading this type of image.");
+                  log.debug("Failed to read image");
+                  callback.error(resources.javaCannotReadImage());
                   continue;
                }
             }
             catch (IOException e)
             {
-               callback.error("Failure while reading image file: " + e);
+               callback.error(resources.failureWhileReadingImage(e));
                continue;
             }
 
             // Find best size
+            log.verbose("Calculating decal size");
             callback.c3_CalculatingSize();
             DecalSize size = sizes.getClosestDimension(image);
+            log.debugObject("size", size);
             callback.c4_Resizing(size);
 
+            log.verbose("Creating WAD entry");
             WadEntry entry = new WadEntry("pldecal", size.getWidth(), size.getHeight(), image);
+            log.verboseObject("entry", entry);
 
             // Create palette
+            log.verbose("Generating palette");
             callback.c5_GeneratingPalette();
             entry.generatePaletteFromAllMips();
 
             // Write to WAD
+            log.verbose("Creating WAD file");
             File directory = imageFile.getParentFile();
             File wadFile = new File(directory, imageFile.getName() + ".wad");
+            log.debugObject("wadFile", wadFile);
             callback.c6_WritingWad(wadFile);
             Wad wad = new Wad();
             wad.addEntry(entry);
 
             try
             {
+               log.verbose("Writing WAD file");
                wad.write(wadFile);
             }
             catch (IOException e)
             {
-               callback.error("Failure while writing WAD file: " + e);
+               log.warn("Error writing WAD file");
+               log.dbe(DebugLevel.L5_DEBUG, e);
+               callback.error(resources.failureWhileWritingWadFile(e));
                continue;
             }
 
@@ -152,6 +181,7 @@ DecalCreator
 
             if (writeMipsToPngs)
             {
+               log.debug("Writing MIPs to files");
                try
                {
                   callback.c65_WritingMipsToPngs();
@@ -169,7 +199,9 @@ DecalCreator
                }
                catch (IOException e)
                {
-                  callback.error("Failure while writing PNG file(s): " + e);
+                  log.warn("Failed to write MIPs to files");
+                  log.dbe(DebugLevel.L5_DEBUG, e);
+                  callback.error(resources.failureWhileWritingPngFiles(e));
                   continue;
                }
             }
@@ -188,11 +220,15 @@ DecalCreator
          }
          catch (RuntimeException e)
          {
+            log.error("RuntimeException in DecalCreator");
+            log.warnException(e);
             callback.uncaughtError(e);
             continue;
          }
          catch (Error e)
          {
+            log.error("java.lang.Error in DecalCreator");
+            log.warnException(e);
             callback.uncaughtError(e);
             continue;
          }
@@ -200,7 +236,10 @@ DecalCreator
          callback.c7_ImageDone();
       }
 
+      log.verbose("Done");
       callback.allDone();
+
+      log.exit("createDecals()");
    }
 
    public static interface
@@ -236,7 +275,6 @@ DecalCreator
       public void
       allDone();
 
-      // TODO (grahaml) Internationalize this:
       public void
       error(String error);
 

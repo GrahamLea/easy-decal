@@ -1,6 +1,6 @@
 package org.grlea.graphics.histogram;
 
-// $Id: ColourHistogram3D.java,v 1.1 2004-11-25 05:07:16 grlea Exp $
+// $Id: ColourHistogram3D.java,v 1.2 2005-12-25 22:10:14 grlea Exp $
 // Copyright (c) 2004 Graham Lea. All rights reserved.
 
 // Licensed under the Apache License, Version 2.0 (the "License");
@@ -20,13 +20,12 @@ import org.grlea.graphics.ColourHelp;
 import java.awt.image.BufferedImage;
 import java.util.ArrayList;
 import java.util.Iterator;
-import java.util.Random;
 
 /**
  * <p></p>
  *
  * @author grahaml
- * @version $Revision: 1.1 $
+ * @version $Revision: 1.2 $
  */
 public class
 ColourHistogram3D
