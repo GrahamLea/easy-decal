@@ -1,10 +1,11 @@
 body { background-color: #000000; color: #FFFFFF; font-family: arial, sans-serif; }
-div { width: 800px; }
-h1, h2, h3 { font-family: verdana, sans-serif; background-color: #FF0000; width: 100%; padding: 0.2em; }
+div { width: 700px; }
+h1, h2, h3 { font-family: verdana, sans-serif; background-color: #5040b0; width: 100%; padding: 0.2em; }
 h1, h2 { border-width: 1; border-style: solid; border-color: white; }
 h2 { width: 80%; }
 h3 { width: 50%; }
 dt { font-weight: bold; margin-top: 1em; }
 dd { margin-top: 0.5em; font-size: smaller; }
 pre, code { font-size: x-small; font-weight: bold; }
-a { color: #FF0000; }
+a { color: #5040b0; }
+p { text-align: justify; }

@@ -1,1 +1,9 @@
 Main-Class: org.grlea.games.hl.decal.EasyDecal
+Class-Path: lib/simple-log.jar
+  lib/gui-commands-1.1.42.jar
+  lib/explicitTableBuilder-0.1.24.jar
+  lib/elcore.jar
+  lib/foxtrot.jar
+  lib/jdic.jar
+  lib/jdic_stub.jar
+  lib/jdic-native
