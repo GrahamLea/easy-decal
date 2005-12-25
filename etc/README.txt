@@ -1,24 +1,18 @@
 
                                  Easy Decal
 
-                                Version @VERSION@
+                                Version  @VERSION@
 
-                        http://easy-decal.dev.java.net/
+                       http://www.grlea.org/easydecal/
 
 LICENSE
 
-Easy Decal is Copyright (c) 2004 Graham Lea. All rights reserved.
+Easy Decal is Copyright (c) 2004-2005 Graham Lea. All rights reserved.
 Easy Decal is freely distributed under the Apache License 2.0.
 See LICENSE.txt for details.
 
 
-INSTALLATION
-
-To install Easy Decal, simply unzip the the release ZIP straight into Prorgam Files, making sure
-the 'Use Folder Names' option is on.
-
-
-REQUIREMENTS
+REQUIREMENTS (IMPORTANT!)
 
 To run Easy Decal, you need a Java Runtime Environment (JRE) installed.
 The version must be 1.4.2 or above.
@@ -27,28 +21,62 @@ Version 1.4.1 WILL NOT WORK.
 Download Java now   @   http://java.com/
 
 
+INSTALLATION - EasyDecal_Setup.exe
+
+If you donwloaded the installer and you're reading this, you've probably already run it, which is
+all you needed to do.
+
+INSTALLATION - EasyDecal.zip
+
+If you donwloaded the ZIP, simply unzip it straight into Program Files, making sure the
+'Use Folder Names' option is on.
+
+
 USAGE
 
-Information about creating decals with Easy Decal can be found in doc/Create_Decals.html
+Easy Decal can be run either by:
 
-Information about installing decals can be found in doc/Install_Decals.html
+   1) Double-clicking the Easy Decal icon, which opens the Easy Decal GUI; or
+
+   2) Dragging an image or images and dropping them onto the Easy Decal icon.
+      This will create decals from those images without opening the GUI.
+
+More information about creating decals with Easy Decal can be found in doc/Create_Decals.html
+
+Information about how to install decals can be found in doc/Install_Decals.html
+
+Some parameters controlling the behaviour of Easy Decal can be changed through the easy-decal.cfg
+file. Documentation about the parameters can be found in that file.
 
 
-STATUS
+INTERNATIONALISATION
 
-Version 0.1 alpha is a first cut, but not a rough cut.
-Quite a bit of time was spent tweaking the scaling and colour-choosing code, a fair bit of testing
-has been performed and a few bugs were found and fixed.
+Easy Decal should automatically display in English, French, German or Spanish, depending on the
+locale settings on your computer.
+
+If you would like to contribute a translation for another language, or have corrections that should
+be made to the existing translations, please send an email to:
+
+   owner@easy-decal.dev.java.net
+
+
+MAKE A DONATION
+
+Easy Decal is FREE.
+You can download it and run it without paying a cent.
+It has no limitations and no "trial period".
+
+However, it took me a lot of time to create.
+If you use and like Easy Decal, I'd really appreciate it if you make a small donation.
+See here for more information:
+http://www.grlea.org/easydecal/donate
 
 
 FUTURE FEATURES
 
-The future of Easy Decal should include:
-
-* Options (transparency, dithering)
-* GUI
-* Automatic installation of decals
-* WebStart deployment
+While there is currently no plan to make any improvements to Easy Decal, there are some very useful
+features (e.g. installing decals) which, if there is sufficient interest, I might be inspired to
+implement. See the Donate link above for more information. ;)
 
 
 CONTACT
