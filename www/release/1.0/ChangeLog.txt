@@ -1,0 +1,38 @@
+
+                                 Easy Decal
+
+                                Version  1.0
+
+                       http://www.grlea.org/easydecal/
+
+CHANGE LOG
+
+1.0
+
+   + Implemented the GUI!
+
+0.5a
+
+   + Internationalised the batch processing.
+   + Added BabelFish'd language resources for Español, Français and Deutsch.
+   + Refactored lots of the scaling code to solve Issue 1.
+   + Issue 1: (BUG) Scales images smaller than a valid decal size
+   + Issue 2: (RFE) Publicise "Write MIPs to PNGs" Functionality
+
+0.4a
+
+   + Refactored the batch processor class in preparation for implementing the GUI.
+
+0.3a
+
+   + Issue -2: (BUG) Source images with transparent areas produced blue-hatched backgrounds.
+
+0.2a
+
+   + Moved most functionality into the Wad API
+   + Discovered the Half-Life engine doesn't even USE the lower MIPs! Oh well...
+   + Issue -1: (BUG) Illegally sized decals created
+
+0.1a
+
+   + Initial alpha release.
