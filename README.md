@@ -13,16 +13,15 @@ At the time, the only other way to create custom decals was to follow complicate
 Due to the simplicity of many graphics programs' palette-choosing algorithms, results were often poor,
 and because of the complicated instructions there were many, many forum posts about "I can't get this to work."
 
-After creating one or two myself manuall, I thought it seemed like a small but interesting problem to attack 
+After creating one or two myself manually, I thought it seemed like a small but interesting problem to attack 
 with code, so I set to work creating first a command line tool for myself to use and, eventually, a GUI wizard
 that allowed anyone to use the tool simply.
 
 ## Did anyone use it?
 
 Easy Decal was *amazingly* popular - as in, thousands and thousands of downloads over many months.
-Despite having a 'Donate' button in the wizard, I only ever received one donation, which turned out to be a mistake.
-I consider it one of my biggest entrepreneurial mistakes that I never considered better monetisation strategies
-for Easy Decal, and intead gave away for free a popular niche tool to a very big market.
+Despite having a 'Donate' button in the wizard, though, I only ever received one donation, which turned out to be a mistake.
+I consider it one of my biggest entrepreneurial mistakes that I never considered finding a better monetisation strategy for Easy Decal, and intead gave away for free a hugely popular niche tool to a very big market.
 
 ## What's interesting about it?
 
@@ -35,3 +34,5 @@ into code.
 
 Secondly, it contains a mostly-complete Java implementation for writing out 
 [Half-Life WAD3 files](https://developer.valvesoftware.com/wiki/WAD "WAD file format description on Valve Dev community") (the old-school version of what are called "materials" in Source), complete with auto-generating MIPs for different levels of detail (LOD).
+
+Lastly, I was really into Java Swing at the time, so it was a good excuse to practise building a small but real GUI using the tools of the day. (Anyone remember Foxtrot?)
